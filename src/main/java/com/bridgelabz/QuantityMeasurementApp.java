@@ -2,171 +2,96 @@ package com.bridgelabz;
 
 public class QuantityMeasurementApp {
 
-    // UC1
-    public static class Feet {
+    private final double value;
+    private final WeightUnit unit;
 
-        private final double value;
-
-        public Feet(double value) {
-            this.value = value;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-
-            if (this == obj)
-                return true;
-
-            if (obj == null)
-                return false;
-
-            if (getClass() != obj.getClass())
-                return false;
-
-            Feet other = (Feet) obj;
-
-            return Double.compare(this.value, other.value) == 0;
-        }
+    public double getValue() {
+        return value;
     }
 
-    // UC2
-    public static class Inches {
+    public QuantityWeight(double value, WeightUnit unit) {
+        if (unit == null)
+            throw new IllegalArgumentException("Unit cannot be null");
 
-        private final double value;
+        if (!Double.isFinite(value))
+            throw new IllegalArgumentException("Invalid numeric value");
 
-        public Inches(double value) {
-            this.value = value;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-
-            if (this == obj)
-                return true;
-
-            if (obj == null)
-                return false;
-
-            if (getClass() != obj.getClass())
-                return false;
-
-            Inches other = (Inches) obj;
-
-            return Double.compare(this.value, other.value) == 0;
-        }
+        this.value = value;
+        this.unit = unit;
     }
 
-    // UC3 + UC4 + UC5 + UC6 + UC7
-    public static class Length {
+    // Convert to base unit (Kilogram)
+    private double toBaseUnit() {
+        return unit.convertToBaseUnit(value);
+    }
 
-        private final double value;
-        private final LengthUnit unit;
+    // Equality check
+    @Override
+    public boolean equals(Object obj) {
 
-        public Length(double value, LengthUnit unit) {
+        if (this == obj) return true;
 
-            if (unit == null)
-                throw new IllegalArgumentException("Unit cannot be null");
+        if (obj == null) return false;
 
-            if (!Double.isFinite(value))
-                throw new IllegalArgumentException("Invalid numeric value");
+        if (getClass() != obj.getClass()) return false;
 
-            this.value = value;
-            this.unit = unit;
-        }
+        QuantityWeight other = (QuantityWeight) obj;
 
-        public double getValue() {
-            return value;
-        }
+        return Double.compare(this.toBaseUnit(), other.toBaseUnit()) == 0;
+    }
 
-        // Convert to base unit (FEET)
-        private double toBaseUnit() {
-            return unit.convertToBaseUnit(value);
-        }
+    // Convert weight to another unit
+    public QuantityWeight convertTo(WeightUnit target) {
 
-        // UC3 Equality
-        @Override
-        public boolean equals(Object obj) {
+        if (target == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
 
-            if (this == obj)
-                return true;
+        double baseValue = unit.convertToBaseUnit(value);
 
-            if (obj == null)
-                return false;
+        double convertedValue = target.convertFromBaseUnit(baseValue);
 
-            if (getClass() != obj.getClass())
-                return false;
+        return new QuantityWeight(convertedValue, target);
+    }
 
-            Length other = (Length) obj;
+    // Addition (result in first operand unit)
+    public QuantityWeight add(QuantityWeight other) {
 
-            double difference = Math.abs(this.toBaseUnit() - other.toBaseUnit());
+        if (other == null)
+            throw new IllegalArgumentException("Weight cannot be null");
 
-            return difference < 0.0001;
-        }
+        double base1 = this.toBaseUnit();
 
-        // UC5 Static conversion
-        public static double convert(double value, LengthUnit source, LengthUnit target) {
+        double base2 = other.toBaseUnit();
 
-            if (!Double.isFinite(value))
-                throw new IllegalArgumentException("Invalid numeric value");
+        double sumBase = base1 + base2;
 
-            if (source == null || target == null)
-                throw new IllegalArgumentException("Unit cannot be null");
+        double resultValue = unit.convertFromBaseUnit(sumBase);
 
-            double baseValue = source.convertToBaseUnit(value);
-            return target.convertFromBaseUnit(baseValue);
-        }
+        return new QuantityWeight(resultValue, unit);
+    }
 
-        // Instance conversion
-        public Length convertTo(LengthUnit target) {
+    // Addition with explicit target unit
+    public QuantityWeight add(QuantityWeight other, WeightUnit targetUnit) {
 
-            double baseValue = unit.convertToBaseUnit(value);
-            double convertedValue = target.convertFromBaseUnit(baseValue);
+        if (other == null)
+            throw new IllegalArgumentException("Weight cannot be null");
 
-            return new Length(convertedValue, target);
-        }
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
 
-        // UC6 Addition
-        public Length add(Length other) {
+        double base1 = this.toBaseUnit();
 
-            if (other == null)
-                throw new IllegalArgumentException("Length cannot be null");
+        double base2 = other.toBaseUnit();
 
-            double base1 = this.toBaseUnit();
-            double base2 = other.toBaseUnit();
+        double sumBase = base1 + base2;
 
-            double sumBase = base1 + base2;
+        double resultValue = targetUnit.convertFromBaseUnit(sumBase);
 
-            double resultValue = unit.convertFromBaseUnit(sumBase);
+        return new QuantityWeight(resultValue, targetUnit);
+    }
 
-            return new Length(resultValue, unit);
-        }
-
-        // UC7 Addition with target unit
-        public Length add(Length other, LengthUnit targetUnit) {
-
-            if (other == null)
-                throw new IllegalArgumentException("Length cannot be null");
-
-            if (targetUnit == null)
-                throw new IllegalArgumentException("Target unit cannot be null");
-
-            double base1 = this.toBaseUnit();
-            double base2 = other.toBaseUnit();
-
-            double sumBase = base1 + base2;
-
-            double resultValue = targetUnit.convertFromBaseUnit(sumBase);
-
-            return new Length(resultValue, targetUnit);
-        }
-
-        @Override
-        public String toString() {
-            return value + " " + unit;
-        }
+    @Override
+    public String toString() {
+        return value + " " + unit;
     }
 }
