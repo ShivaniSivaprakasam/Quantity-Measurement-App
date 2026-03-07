@@ -1,8 +1,12 @@
 package com.bridgelabz;
 
+<<<<<<< Updated upstream
 import java.util.function.DoubleBinaryOperator;
 
 public class Quantity<U extends Enum<U> & IMeasurable> {
+=======
+public class Quantity<U extends IMeasurable> {
+>>>>>>> Stashed changes
 
     private final double value;
     private final U unit;
@@ -31,6 +35,7 @@ public class Quantity<U extends Enum<U> & IMeasurable> {
     }
 
     public Quantity<U> convertTo(U targetUnit) {
+<<<<<<< Updated upstream
         if (targetUnit == null)
             throw new IllegalArgumentException("Target unit cannot be null");
 
@@ -71,10 +76,24 @@ public class Quantity<U extends Enum<U> & IMeasurable> {
             Quantity<U> other,
             U targetUnit,
             boolean targetRequired) {
+=======
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        double base = unit.convertToBaseUnit(value);
+        double converted = targetUnit.convertFromBaseUnit(base);
+
+        return new Quantity<>(converted, targetUnit);
+    }
+
+    public Quantity<U> add(Quantity<U> other) {
+>>>>>>> Stashed changes
 
         if (other == null)
             throw new IllegalArgumentException("Other quantity cannot be null");
 
+<<<<<<< Updated upstream
         if (!unit.getDeclaringClass().equals(other.unit.getDeclaringClass()))
             throw new IllegalArgumentException("Cannot operate on different measurement categories");
 
@@ -111,19 +130,44 @@ public class Quantity<U extends Enum<U> & IMeasurable> {
 
         double baseResult = performBaseArithmetic(other, ArithmeticOperation.ADD);
         double result = round(unit.convertFromBaseUnit(baseResult));
+=======
+        double base1 = this.toBaseUnit();
+        double base2 = other.toBaseUnit();
+
+        double sum = base1 + base2;
+
+        double result = unit.convertFromBaseUnit(sum);
+>>>>>>> Stashed changes
 
         return new Quantity<>(result, unit);
     }
 
     public Quantity<U> add(Quantity<U> other, U targetUnit) {
+<<<<<<< Updated upstream
         validateArithmeticOperands(other, targetUnit, true);
 
         double baseResult = performBaseArithmetic(other, ArithmeticOperation.ADD);
         double result = round(targetUnit.convertFromBaseUnit(baseResult));
+=======
+
+        if (other == null)
+            throw new IllegalArgumentException("Other quantity cannot be null");
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        double base1 = this.toBaseUnit();
+        double base2 = other.toBaseUnit();
+
+        double sum = base1 + base2;
+
+        double result = targetUnit.convertFromBaseUnit(sum);
+>>>>>>> Stashed changes
 
         return new Quantity<>(result, targetUnit);
     }
 
+<<<<<<< Updated upstream
     // 🔹 SUBTRACT
 
     public Quantity<U> subtract(Quantity<U> other) {
@@ -167,6 +211,23 @@ public class Quantity<U extends Enum<U> & IMeasurable> {
 
         double difference = Math.abs(this.toBaseUnit() - other.toBaseUnit());
         return difference < 0.0001;   // tolerance comparison
+=======
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj)
+            return true;
+
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
+        Quantity<?> other = (Quantity<?>) obj;
+
+        if (!unit.getClass().equals(other.unit.getClass()))
+            return false;
+
+        return Double.compare(this.toBaseUnit(), other.toBaseUnit()) == 0;
+>>>>>>> Stashed changes
     }
 
     @Override
