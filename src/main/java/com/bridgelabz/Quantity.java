@@ -98,4 +98,8 @@ public class Quantity<U extends IMeasurable> {
     public String toString() {
         return value + " " + unit.getUnitName();
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
