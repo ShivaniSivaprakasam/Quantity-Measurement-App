@@ -1,10 +1,5 @@
 # Quantity Measurement App
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
-![JUnit](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-
 ## Overview
 
 The **Quantity Measurement App** is a use-case-driven application built using **Core Java** and **Maven**. It implements quantity measurement operations step by step, covering length, weight, volume, and temperature — all with unit conversion and arithmetic support.
@@ -33,19 +28,19 @@ Each feature is implemented as a distinct **Use Case (UC)** to ensure modular de
 
 ## Project Structure
 
----
-
+```
 src
 └── main
-└── java
-└── com.bridgelabz
-├── Quantity.java
-├── LengthUnit.java
-├── WeightUnit.java
-├── VolumeUnit.java
-├── TemperatureUnit.java
-├── IMeasurable.java
-└── QuantityMeasurementApp.java
+    └── java
+        └── com.bridgelabz
+            ├── Quantity.java
+            ├── LengthUnit.java
+            ├── WeightUnit.java
+            ├── VolumeUnit.java
+            ├── TemperatureUnit.java
+            ├── IMeasurable.java
+            └── QuantityMeasurementApp.java
+```
 ---
 
 ## Use Cases
